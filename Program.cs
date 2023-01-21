@@ -14,6 +14,6 @@ var candidates = Enumerable
     .Select(x => $"{x:D3}");
 
 var solutions = candidates
-    .Where(input => clues.All(clue => new ClueValidator(clue, input).SatisfiesClue()));
+    .Where(input => clues.All(clue => clue.Matches(input)));
 
 Console.WriteLine("Solution(s): {0}", string.Join(", ", solutions));
