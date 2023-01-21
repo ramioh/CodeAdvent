@@ -4,34 +4,29 @@ public class Clue
 {
     private readonly string _pattern;
 
-    private readonly int _correctElementCount;
+    private readonly int _inPositionElementCount;
 
-    private readonly bool _isInPosition;
+    private readonly int _outOfPositionElementCount;
 
-    public Clue(string pattern, int correctElementCount, bool isInPosition)
+    public Clue(string pattern, int inPositionElementCount, int outOfPositionElementCount)
     {
         _pattern = pattern;
-        _correctElementCount = correctElementCount;
-        _isInPosition = isInPosition;
+        _inPositionElementCount = inPositionElementCount;
+        _outOfPositionElementCount = outOfPositionElementCount;
     }
 
     public bool Matches(string input)
-        => this switch
-        {
-            _ when input.Length != _pattern.Length
-                => throw new ArgumentOutOfRangeException(nameof(input), "The length of input and clue pattern must match."),
+        => input.Length != _pattern.Length
+            ? throw new ArgumentOutOfRangeException(nameof(input), "The length of input and clue pattern must match.")
+            : GetInPositionMatchCount(input) == _inPositionElementCount
+              && GetOutOfPositionMatchCount(input) == _outOfPositionElementCount;
 
-            { _correctElementCount: 0 } => !input.Intersect(_pattern).Any(),
-            { _isInPosition: false } => GetOutOfPositionOccurrenceCount(input) == _correctElementCount,
-            { _isInPosition: true } => GetInPositionOccurrenceCount(input) == _correctElementCount,
-        };
-
-    private int GetInPositionOccurrenceCount(string input)
+    private int GetInPositionMatchCount(string input)
         => _pattern.Select((c, idx) => c == input[idx] ? 1 : 0).Sum();
 
-    private int GetOutOfPositionOccurrenceCount(string input)
+    private int GetOutOfPositionMatchCount(string input)
         => _pattern.Select((c, idx) => OccursOutOfPosition(input, c, idx) ? 1 : 0).Sum();
 
-    private bool OccursOutOfPosition(string input, char charToCheck, int position)
+    private static bool OccursOutOfPosition(string input, char charToCheck, int position)
         => input[position] != charToCheck && input.Contains(charToCheck);
 };

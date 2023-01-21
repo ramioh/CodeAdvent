@@ -2,11 +2,11 @@
 
 var clues = new Clue[]
 {
-    new("682", 1, true),
-    new("614", 1, false),
-    new("206", 2, false),
-    new("738", 0, false),
-    new("780", 1, false),
+    new("682", 1, 0),
+    new("614", 0, 1),
+    new("206", 0, 2),
+    new("738", 0, 0),
+    new("780", 0, 1),
 };
 
 var candidates = Enumerable
